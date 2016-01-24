@@ -4,5 +4,5 @@
   user: ubuntu
 
 - include: appServer_create.yml
-- include: server_setup.yml
+- include: appServer_setup.yml
 - include: app_install.yml
