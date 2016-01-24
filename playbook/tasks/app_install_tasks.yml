@@ -5,7 +5,7 @@
   file: path={{ install_dir }} owner=ubuntu recurse=yes
   become: yes
 - name: Get application from github
-  git: repo=https://github.com/alubneuski/{{ app_name }}
+  git: repo=https://github.com/yurikorzun/{{ app_name }}
        dest="{{ install_dir }}/{{ app_name }}"
        version=master
 - name: Change permissions of "{{ app_name }}" folder
