@@ -10,7 +10,7 @@
     include_vars: vars/main.yml
   - name: Provision db server ec2 instance with amiid: {{ db_ami_id }}
     ec2:
-      ec2_url: "https://432975299334.signin.aws.amazon.com"
+      ec2_url: "https://{{ iam_account_number }}.signin.aws.amazon.com"
       region: us-west-2
       key_name: alexL
       group: default_notinphilly
