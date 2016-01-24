@@ -1,0 +1,24 @@
+---
+- name: include vars 
+  include_vars: vars/main.yml
+- name: Install mongodb
+  apt: name=mongodb state=present update_cache=yes
+  become: yes
+- name: Install nodejs
+  apt: name=nodejs state=present
+  become: yes
+- name: Install npm
+  apt: name=npm state=present
+  become: yes
+- name: Install nodejs-legacy (Something that is needed for the Ubuntu)
+  apt: name=nodejs-legacy state=present
+  become: yes
+- name: Install git
+  apt: name=git state=present
+  become: yes
+- name: Install bower
+  command: npm install -g  bower 
+  become: yes
+- name: Install forever
+  command: npm install -g forever
+  become: yes

@@ -1,0 +1,8 @@
+---
+# vars file for notinphilly
+app_ami_id: ami-9abea4fb
+db_ami_id: ami-9abea4fb
+env: dev
+app_name: notinphilly
+install_dir: /srv
+iam_account_number: 9999999999 

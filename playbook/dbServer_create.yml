@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  remote_user: ubuntu
+  
+  tasks:
+
+  - name: Include vars
+    include_vars: vars/main.yml
+  - name: Provision db server ec2 instance with amiid: {{ db_ami_id }}
+    ec2:
+      ec2_url: "https://432975299334.signin.aws.amazon.com"
+      region: us-west-2
+      key_name: alexL
+      group: default_notinphilly
+      instance_type: t2.micro
+      image: "{{ db_ami_id }}"
+      wait: true
+      exact_count: 1
+      count_tag:
+         Name: NotInPhilly
+      instance_tags:
+         Name: dbServer
+    register: dbServer 
+  - name: Print out ec2 db server 
+    debug: var=dbServer 
+  - name: Add all instance public IPs to host group
+    add_host: hostname={{ item.public_dns_name }} groups=dbservers
+    with_items: dbServer.instances
+  - name: Wait for port 22
+    wait_for: port=22 host={{ item.public_dns_name }} 
+    with_items: dbServer.instances
+  - name: Dump the EC2 into the inventory file
+    template: src=templates/inventory dest=playbook/inventory/devservers mode=0644

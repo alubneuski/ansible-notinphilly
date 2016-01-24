@@ -1,0 +1,8 @@
+---
+- hosts: ec2hosts
+  name: notinphilly configuration play
+  user: ubuntu
+
+- include: appServer_create.yml
+- include: server_setup.yml
+- include: app_install.yml

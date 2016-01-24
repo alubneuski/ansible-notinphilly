@@ -1,0 +1,43 @@
+---
+- name: Include variables
+  include_vars: vars/main.yml
+- name: Change permissions for {{ install_dir }} folder where the application will be running
+  file: path={{ install_dir }} owner=ubuntu recurse=yes
+  become: yes
+- name: Get application from github
+  git: repo=https://github.com/alubneuski/{{ app_name }}
+       dest="{{ install_dir }}/{{ app_name }}"
+       version=master
+- name: Change permissions of "{{ app_name }}" folder
+  file: path="{{ install_dir }}/{{ app_name }}" owner=ubuntu recurse=yes
+- name: Run bower install
+  command: bower install
+  args:
+   chdir: "{{ install_dir }}/{{ app_name }}"
+- name: Install npm dependencies
+  command: npm install
+  args:
+    chdir: "{{ install_dir }}/{{ app_name }}"
+  become: yes
+- name: Seed the database
+  command: node init.js 
+  args:
+    chdir: "{{ install_dir }}/{{ app_name }}"
+  when:  env  == 'dev'
+- name: Check which apps are running
+  command: forever list
+  register: forever_list
+  changed_when: false 
+- name: Start server
+  command: forever start server.js
+  when: "forever_list.stdout.find('{{ install_dir }}/{{ app_name }}/server.js') == -1"
+  args: 
+    chdir: "{{ install_dir }}/{{ app_name }}"
+- get_url: url=http://169.254.169.254/latest/meta-data/public-hostname dest=./info
+  tags: get_url
+- command: cat ./info
+  register: info
+  tags: save_info
+- name: Printing The URL for the application 
+  debug: msg="PLEASE FOLLOW THIS LINK TO THE APPLICATION http://{{ info.stdout }}:8080/" 
+  tags: display_info

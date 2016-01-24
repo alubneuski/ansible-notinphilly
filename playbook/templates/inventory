@@ -1,0 +1,11 @@
+[localhost]
+localhost
+[webservers]
+[appservers]
+ubuntu@{{ appServer.instances[0].public_dns_name }}
+[dbServers]
+[devservers:children]
+appservers
+dbservers
+[devservers:vars]
+env=dev

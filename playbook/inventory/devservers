@@ -1,0 +1,8 @@
+[localhost]
+localhost
+[appservers]
+ubuntu@ec2-54-201-246-157.us-west-2.compute.amazonaws.com
+[devservers:children]
+appservers
+[devservers:vars]
+env=dev

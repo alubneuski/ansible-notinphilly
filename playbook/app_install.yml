@@ -1,0 +1,9 @@
+---
+- hosts: appservers 
+  name: notinphilly configuration play
+  remote_user: ubuntu
+  
+  tasks:
+  - include_vars: vars/main.yml
+  - include: tasks/app_install_tasks.yml
+
