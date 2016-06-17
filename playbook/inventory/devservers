@@ -1,7 +1,7 @@
 [localhost]
 localhost
 [appservers]
-ubuntu@ec2-54-201-246-157.us-west-2.compute.amazonaws.com
+ec2-54-152-134-7.compute-1.amazonaws.com
 [devservers:children]
 appservers
 [devservers:vars]

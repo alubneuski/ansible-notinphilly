@@ -5,7 +5,7 @@
   file: path={{ install_dir }} owner=ubuntu recurse=yes
   become: yes
 - name: Get application from github
-  git: repo=https://github.com/yurikorzun/{{ app_name }}
+  git: repo=https://github.com/alubneuski/{{ app_name }}
        dest="{{ install_dir }}/{{ app_name }}"
        version=master
 - name: Change permissions of "{{ app_name }}" folder
@@ -19,15 +19,22 @@
   args:
     chdir: "{{ install_dir }}/{{ app_name }}"
   become: yes
-- name: Seed the database
-  command: node init.js 
-  args:
-    chdir: "{{ install_dir }}/{{ app_name }}"
-  when:  env  == 'dev'
+#- name: Seed the database
+#  command: node init.js 
+#  args:
+#    chdir: "{{ install_dir }}/{{ app_name }}"
+#  when:  env  == 'dev'
 - name: Check which apps are running
   command: forever list
   register: forever_list
   changed_when: false 
+- name: Stop server
+  command: forever stop server.js
+  ignore_errors: true
+- name: Set env variables
+  lineinfile: dest=/etc/environment line='AWS_IP="{{ ansible_eth0['ipv4']['address'] }}"'
+  become: yes
+  become_user: root
 - name: Start server
   command: forever start server.js
   when: "forever_list.stdout.find('{{ install_dir }}/{{ app_name }}/server.js') == -1"

@@ -3,6 +3,6 @@
   name: notinphilly configuration play
   user: ubuntu
 
-- include: appServer_create.yml
+#- include: appServer_create.yml
 - include: appServer_setup.yml
 - include: app_install.yml
